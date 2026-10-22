@@ -68,7 +68,7 @@ chmod +x build_apk.sh
 
 - `main.py` — Kivy-интерфейс, цветовой ввод, избранное и экран профилей.
 - `ir_backend.py` — Android Consumer IR, кодировщик NEC и проверка RAW-посылок.
-- `buildozer.spec` — разрешение `TRANSMIT_IR` и параметры APK.
+- `buildozer.spec` — разрешение `TRANSMIT_IR`, параметры APK и зафиксированный коммит python-for-android с исправлением ошибки pip.
 - `profiles.sample.json` — минимальный пример профиля.
 - `build_apk.sh` — запуск debug-сборки Buildozer.
 
@@ -87,7 +87,7 @@ py -3.12 -m venv .venv
 
 ## Сборка APK через GitHub Actions
 
-Workflow находится в `.github/workflows/android.yml` и собирает APK напрямую на чистом GitHub-hosted `ubuntu-24.04` runner. Docker-образ стороннего Buildozer Action больше не используется, поэтому ошибочный Launchpad PPA из этого образа не попадает в сборку. В списке пакетов есть `libltdl-dev`: рецепт `libffi` в python-for-android использует предоставляемый им макрос `LT_SYS_SYMBOL_USCORE`. Чтобы запустить workflow:
+Workflow находится в `.github/workflows/android.yml` и собирает APK напрямую на чистом GitHub-hosted `ubuntu-24.04` runner. Docker-образ стороннего Buildozer Action больше не используется, поэтому ошибочный Launchpad PPA из этого образа не попадает в сборку. В списке пакетов есть `libltdl-dev`: рецепт `libffi` в python-for-android использует предоставляемый им макрос `LT_SYS_SYMBOL_USCORE`. В `buildozer.spec` python-for-android закреплён на коммите, который убирает обновление pip, повреждавшее временное build-окружение. Чтобы запустить workflow:
 
 1. Создайте пустой репозиторий GitHub и отправьте туда **содержимое** папки `ir_led_remote` вместе со скрытой папкой `.github`.
 2. При отправке в ветку `main` GitHub автоматически начнёт сборку. Её также можно вручную запустить во вкладке **Actions → Build Android APK → Run workflow**.
