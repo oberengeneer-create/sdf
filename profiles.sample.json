@@ -1,0 +1,6 @@
+{
+  "protocol": "rgb",
+  "carrier_hz": 38000,
+  "address": "00",
+  "key_codes": {}
+}
