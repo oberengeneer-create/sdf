@@ -20,11 +20,13 @@ jobs:
       - name: Install system dependencies
         run: |
           sudo apt-get update
+          # libltdl-dev supplies LT_SYS_SYMBOL_USCORE for p4a's libffi recipe.
           sudo apt-get install -y \
             git zip unzip openjdk-17-jdk python3-pip python3-venv \
-            autoconf libtool pkg-config zlib1g-dev libncurses5-dev \
+            autoconf automake autopoint libtool libltdl-dev pkg-config \
+            zlib1g-dev libncurses5-dev \
             libncursesw5-dev libtinfo6 cmake libffi-dev libssl-dev \
-            automake autopoint gettext curl
+            gettext curl
 
       - name: Set up Python
         uses: actions/setup-python@v7

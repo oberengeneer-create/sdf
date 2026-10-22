@@ -50,8 +50,9 @@ wsl --install -d Ubuntu-24.04
 ```bash
 sudo apt update
 sudo apt install -y git zip unzip openjdk-17-jdk python3-pip python3-venv \
-  autoconf libtool pkg-config zlib1g-dev libncurses5-dev libncursesw5-dev \
-  libtinfo6 cmake libffi-dev libssl-dev automake autopoint gettext
+  autoconf automake autopoint libtool libltdl-dev pkg-config zlib1g-dev \
+  libncurses5-dev libncursesw5-dev \
+  libtinfo6 cmake libffi-dev libssl-dev gettext
 curl https://sh.rustup.rs -sSf | sh
 source "$HOME/.cargo/env"
 python3 -m venv .venv
@@ -86,7 +87,7 @@ py -3.12 -m venv .venv
 
 ## Сборка APK через GitHub Actions
 
-Workflow находится в `.github/workflows/android.yml` и собирает APK напрямую на чистом GitHub-hosted `ubuntu-24.04` runner. Docker-образ стороннего Buildozer Action больше не используется, поэтому ошибочный Launchpad PPA из этого образа не попадает в сборку. Чтобы запустить workflow:
+Workflow находится в `.github/workflows/android.yml` и собирает APK напрямую на чистом GitHub-hosted `ubuntu-24.04` runner. Docker-образ стороннего Buildozer Action больше не используется, поэтому ошибочный Launchpad PPA из этого образа не попадает в сборку. В списке пакетов есть `libltdl-dev`: рецепт `libffi` в python-for-android использует предоставляемый им макрос `LT_SYS_SYMBOL_USCORE`. Чтобы запустить workflow:
 
 1. Создайте пустой репозиторий GitHub и отправьте туда **содержимое** папки `ir_led_remote` вместе со скрытой папкой `.github`.
 2. При отправке в ветку `main` GitHub автоматически начнёт сборку. Её также можно вручную запустить во вкладке **Actions → Build Android APK → Run workflow**.
