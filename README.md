@@ -86,11 +86,11 @@ py -3.12 -m venv .venv
 
 ## Сборка APK через GitHub Actions
 
-Workflow находится в `.github/workflows/android.yml`. Чтобы его запустить:
+Workflow находится в `.github/workflows/android.yml` и собирает APK напрямую на чистом GitHub-hosted `ubuntu-24.04` runner. Docker-образ стороннего Buildozer Action больше не используется, поэтому ошибочный Launchpad PPA из этого образа не попадает в сборку. Чтобы запустить workflow:
 
 1. Создайте пустой репозиторий GitHub и отправьте туда **содержимое** папки `ir_led_remote` вместе со скрытой папкой `.github`.
 2. При отправке в ветку `main` GitHub автоматически начнёт сборку. Её также можно вручную запустить во вкладке **Actions → Build Android APK → Run workflow**.
-3. Откройте завершившийся запуск и скачайте `LumaIR-debug-apk` в разделе **Artifacts**.
+3. Откройте завершившийся запуск и скачайте `LumaIR-debug-apk` в разделе **Artifacts**. APK находится внутри скачанного архива.
 
 Можно отправить файлы командой Git из PowerShell, находясь в папке проекта:
 
@@ -103,4 +103,4 @@ git remote add origin https://github.com/ВАШ_АККАУНТ/lumair.git
 git push -u origin main
 ```
 
-GitHub Actions собирает отладочный APK, который подходит для установки на телефон; для публикации в магазине потребуется отдельная release-сборка и подпись собственным ключом. Buildozer работает на Linux/macOS, а GitHub Actions запускает этот workflow на Linux runner. Официальный репозиторий Buildozer рекомендует этот Action для CI: [Buildozer Action](https://github.com/marketplace/actions/buildozer-action).
+GitHub Actions собирает отладочный APK, который подходит для установки на телефон; для публикации в магазине потребуется отдельная release-сборка и подпись собственным ключом. Workflow устанавливает системные зависимости и Buildozer непосредственно на Linux runner, затем прикладывает `bin/*.apk` к запуску как artifact. Первый запуск может занять больше времени, потому что Buildozer скачивает Android SDK и NDK.

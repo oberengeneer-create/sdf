@@ -11,23 +11,43 @@ permissions:
 
 jobs:
   build-android:
-    runs-on: ubuntu-latest
+    # Pin the OS so the build environment stays compatible with Buildozer.
+    runs-on: ubuntu-24.04
     steps:
       - name: Check out source
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
-      - name: Build APK with Buildozer
-        id: buildozer
-        uses: ArtemSBulgakov/buildozer-action@v1
+      - name: Install system dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            git zip unzip openjdk-17-jdk python3-pip python3-venv \
+            autoconf libtool pkg-config zlib1g-dev libncurses5-dev \
+            libncursesw5-dev libtinfo6 cmake libffi-dev libssl-dev \
+            automake autopoint gettext curl
+
+      - name: Set up Python
+        uses: actions/setup-python@v7
         with:
-          workdir: .
-          buildozer_version: stable
-          command: buildozer -v android debug
+          python-version: '3.12'
+
+      - name: Install Rust
+        run: |
+          curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
+          echo "$HOME/.cargo/bin" >> "$GITHUB_PATH"
+
+      - name: Install Buildozer
+        run: |
+          python -m pip install --upgrade pip setuptools
+          python -m pip install buildozer cython==0.29.34
+
+      - name: Build APK
+        run: buildozer -v android debug
 
       - name: Save APK as workflow artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: LumaIR-debug-apk
-          path: ${{ steps.buildozer.outputs.filename }}
+          path: bin/*.apk
           if-no-files-found: error
           retention-days: 14
