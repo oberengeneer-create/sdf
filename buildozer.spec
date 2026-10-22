@@ -19,10 +19,10 @@ android.archs = arm64-v8a, armeabi-v7a
 android.accept_sdk_license = True
 android.enable_androidx = True
 p4a.bootstrap = sdl2
-# Fixes p4a's pip self-upgrade venv corruption (BuildDependencyInstallError).
-# Pin the upstream fix until it is included in a stable p4a release.
+# Includes p4a fixes for pip venv corruption and Android-tagged dependency wheels.
+# Pin the upstream PR #3366 merge until it is included in a stable p4a release.
 p4a.branch = develop
-p4a.commit = d2ee8c54d9d42375a95f18159e950a119671cf63
+p4a.commit = 5865575d81d53617784428ee29f57be2716311ea
 
 # Keep the IR feature optional: the app can still open as a color editor on
 # phones without an emitter, and reports that limitation in its status line.
